@@ -17,6 +17,10 @@ impl User {
         }
     }
 
+    pub fn id(&self) -> &ObjectId {
+        &self._id
+    }
+
     pub fn email(&self) -> &str {
         &self.email
     }

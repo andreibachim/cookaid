@@ -1,9 +1,12 @@
 use anyhow::anyhow;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
-use mongodb::bson::doc;
+use mongodb::bson::{doc, oid::ObjectId, Uuid};
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::DATABASE_NAME, AppState};
+use crate::{
+    constants::{DATABASE_NAME, DATABASE_SESSIONS, DATABASE_USERS},
+    AppState,
+};
 
 use super::User;
 
@@ -16,7 +19,7 @@ pub async fn login(
     let collection = app_state
         .mongo_client
         .database(DATABASE_NAME)
-        .collection::<User>("users");
+        .collection::<User>(DATABASE_USERS);
 
     let user = match collection
         .find_one(doc! {"email": &payload.email }, None)
@@ -45,14 +48,41 @@ pub async fn login(
     };
 
     match argon2::verify_encoded(user.password(), payload.password.as_bytes()) {
-        Ok(valid) if valid => StatusCode::OK,
-        Ok(_) => StatusCode::BAD_REQUEST,
+        Ok(valid) if valid => (),
+        Ok(_) => return StatusCode::BAD_REQUEST.into_response(),
         Err(err) => {
             log::error!("Could not compare password hashes. Reason: {}", err);
-            StatusCode::BAD_REQUEST
+            return StatusCode::BAD_REQUEST.into_response();
+        }
+    };
+
+    let token = Uuid::new().to_string();
+
+    let session = Session {
+        _id: ObjectId::new(),
+        user: *user.id(),
+        token,
+    };
+
+    match app_state
+        .mongo_client
+        .database(DATABASE_NAME)
+        .collection::<Session>(DATABASE_SESSIONS)
+        .insert_one(&session, None)
+        .await
+    {
+        Ok(_response) => (
+            StatusCode::OK,
+            Json(LoginResponse {
+                token: session.token,
+            }),
+        )
+            .into_response(),
+        Err(err) => {
+            log::error!("Could not save session. Reason: {}", err);
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
         }
     }
-    .into_response()
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -61,7 +91,18 @@ pub struct LoginRequest {
     password: String,
 }
 
-#[derive(Debug)]
+#[derive(Serialize)]
+pub struct LoginResponse {
+    token: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Session {
+    _id: ObjectId,
+    user: ObjectId,
+    token: String,
+}
+
 struct UserNotFound {
     message: &'static str,
 }
