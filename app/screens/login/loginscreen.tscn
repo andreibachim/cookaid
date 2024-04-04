@@ -1,0 +1,73 @@
+[gd_scene load_steps=2 format=3 uid="uid://cukx8qtur55vx"]
+
+[ext_resource type="Script" path="res://screens/login/loginscreen.gd" id="1_14otl"]
+
+[node name="loginscreen" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+script = ExtResource("1_14otl")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="logo" type="Label" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "CookAid"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="login_form" type="VBoxContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+theme_override_constants/separation = 32
+
+[node name="email_input" type="LineEdit" parent="vbox/login_form"]
+layout_mode = 2
+placeholder_text = "email address"
+
+[node name="password_input" type="LineEdit" parent="vbox/login_form"]
+layout_mode = 2
+placeholder_text = "password"
+secret = true
+
+[node name="submit" type="Button" parent="vbox/login_form"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Log In"
+
+[node name="separator" type="HSeparator" parent="vbox"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="new_here" type="Label" parent="vbox/hbox"]
+layout_mode = 2
+text = "New here?"
+
+[node name="register_link" type="Button" parent="vbox/hbox"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = " Join us!"
+flat = true
+
+[node name="login_request" type="HTTPRequest" parent="."]
+use_threads = true
+
+[connection signal="button_up" from="vbox/login_form/submit" to="." method="_on_submit_button_up"]
+[connection signal="button_up" from="vbox/hbox/register_link" to="." method="_on_register_link_button_up"]
