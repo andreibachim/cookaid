@@ -1,6 +1,9 @@
 use anyhow::anyhow;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
-use mongodb::bson::{doc, oid::ObjectId, Uuid};
+use mongodb::{
+    bson::{doc, oid::ObjectId, Uuid},
+    options::ReplaceOptions,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -59,7 +62,6 @@ pub async fn login(
     let token = Uuid::new().to_string();
 
     let session = Session {
-        _id: ObjectId::new(),
         user: *user.id(),
         token,
     };
@@ -68,7 +70,11 @@ pub async fn login(
         .mongo_client
         .database(DATABASE_NAME)
         .collection::<Session>(DATABASE_SESSIONS)
-        .insert_one(&session, None)
+        .replace_one(
+            doc! { "user": user.id() },
+            &session,
+            ReplaceOptions::builder().upsert(true).build(),
+        )
         .await
     {
         Ok(_response) => (
@@ -98,7 +104,6 @@ pub struct LoginResponse {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Session {
-    _id: ObjectId,
     user: ObjectId,
     token: String,
 }

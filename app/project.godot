@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.2", "Mobile")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
+[autoload]
+
+TokenManager="*res://singletons/token_manager.gd"
+
 [display]
 
 window/size/viewport_width=360

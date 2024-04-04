@@ -34,3 +34,5 @@ theme_override_font_sizes/font_size = 64
 text = "Cookaid"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="check_session_request" type="HTTPRequest" parent="."]

@@ -52,7 +52,17 @@ async fn perform_migrations(client: &Client, config: &config::Config) -> anyhow:
 
     if !databases.contains(&DATABASE_SESSIONS.to_string()) {
         database.create_collection(DATABASE_SESSIONS, None).await?;
-    }
+        database
+            .collection::<Document>(DATABASE_SESSIONS)
+            .create_index(
+                IndexModel::builder()
+                    .keys(doc! {"user": 1})
+                    .options(IndexOptions::builder().unique(true).build())
+                    .build(),
+                None,
+            )
+            .await?;
+    };
 
     Ok(())
 }

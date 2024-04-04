@@ -23,12 +23,13 @@ func _on_submit_button_up():
 			var response_json: Dictionary = JSON.parse_string(
 				response_array[3].get_string_from_utf8())
 			var token = response_json.get("token")
-			print(token)
+			TokenManager.save_token(token)
+			get_tree().change_scene_to_file("res://screens/recipes/recipes.tscn")
 		400:
 			print("Bad Request")
 		_:
 			print("Internal Server Error")
 
-
 func _on_register_link_button_up():
 	get_tree().change_scene_to_file("res://screens/register/registerscreen.tscn")
+
