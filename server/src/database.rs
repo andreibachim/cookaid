@@ -26,8 +26,8 @@ async fn perform_migrations(client: &Client, config: &config::Config) -> anyhow:
 
     //Setup the user collection
     if !databases.contains(&DATABASE_USERS.to_string()) {
-        let email = config.get_string("database.admin.email")?;
-        let password = hash_password(&config.get_string("database.admin.password")?)?;
+        let email = config.get_string("database.admin_email")?;
+        let password = hash_password(&config.get_string("database.admin_password")?)?;
 
         database.create_collection(DATABASE_USERS, None).await?;
 

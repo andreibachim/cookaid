@@ -1,4 +1,7 @@
 [database]
 uri = ""
-admin.email = ""
-admin.password = ""
+admin_email = ""
+admin_password = ""
+
+[client]
+encryption_token= ""

@@ -2,18 +2,31 @@ extends Node
 
 const FILE_LOCATION = "user://token.dat"
 
+var secret = ""
+
+func _ready() -> void:
+	var request := HTTPRequest.new()
+	add_child(request)
+	request.request("http://localhost:8080/api/encryption-token")
+	var response_array = await request.request_completed
+	var response: Dictionary = JSON.parse_string(response_array[3].get_string_from_utf8())
+	secret = response.get("secret")
+	
 func save_token(token: String) -> void:
 	var file = FileAccess.open_encrypted_with_pass(FILE_LOCATION,\
 		FileAccess.WRITE,\
-		"itsapassword");
+		secret);
 	file.store_string(token)
 	file.close()
-	
+
 func get_token() -> String:
 	if (FileAccess.file_exists(FILE_LOCATION)):
 		var file = FileAccess.open_encrypted_with_pass(FILE_LOCATION,\
 			FileAccess.READ,\
-			"itsapassword");
+			secret);
+		if file == null: 
+			delete_token()
+			return ""
 		var token = file.get_as_text()
 		file.close()
 		return token
