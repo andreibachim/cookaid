@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://jmc68lbsflv0"]
+[gd_scene load_steps=2 format=3 uid="uid://jmc68lbsflv0"]
+
+[ext_resource type="Script" path="res://screens/recipes/recipes.gd" id="1_viaqw"]
 
 [node name="recipes" type="MarginContainer"]
 anchors_preset = 15
@@ -8,9 +10,80 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_right = 32
+script = ExtResource("1_viaqw")
 
 [node name="recipes_page" type="Label" parent="."]
 layout_mode = 2
 text = "RECIPES PAGE"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="layer" type="CanvasLayer" parent="."]
+
+[node name="margin" type="MarginContainer" parent="layer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -18.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="new_recipe" type="Button" parent="layer/margin"]
+layout_mode = 2
+text = "  +  "
+
+[node name="popup" type="Popup" parent="."]
+initial_position = 2
+size = Vector2i(320, 400)
+
+[node name="background" type="ColorRect" parent="popup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.160784, 0.160784, 0.160784, 1)
+
+[node name="margin" type="MarginContainer" parent="popup/background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="vbox" type="VBoxContainer" parent="popup/background/margin"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+
+[node name="label" type="Label" parent="popup/background/margin/vbox"]
+layout_mode = 2
+text = "Name your new recipe"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="recipe_name_input" type="LineEdit" parent="popup/background/margin/vbox"]
+layout_mode = 2
+placeholder_text = "recipe name"
+
+[node name="create_button" type="Button" parent="popup/background/margin/vbox"]
+layout_mode = 2
+text = "Create"
+
+[node name="cancel_button" type="Button" parent="popup/background/margin/vbox"]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="button_up" from="layer/margin/new_recipe" to="." method="_on_new_recipe_button_up"]
+[connection signal="button_up" from="popup/background/margin/vbox/create_button" to="." method="_on_create_button_button_up"]
+[connection signal="button_up" from="popup/background/margin/vbox/cancel_button" to="." method="_on_cancel_button_button_up"]

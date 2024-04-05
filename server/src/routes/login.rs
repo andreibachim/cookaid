@@ -108,6 +108,12 @@ pub struct Session {
     token: String,
 }
 
+impl Session {
+    pub fn user_object_id(&self) -> ObjectId {
+        self.user
+    }
+}
+
 struct UserNotFound {
     message: &'static str,
 }

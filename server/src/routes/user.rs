@@ -6,6 +6,7 @@ pub struct User {
     _id: ObjectId,
     email: String,
     password: String,
+    recipes: Vec<ObjectId>,
 }
 
 impl User {
@@ -14,6 +15,7 @@ impl User {
             _id: ObjectId::new(),
             email,
             password,
+            recipes: vec![],
         }
     }
 

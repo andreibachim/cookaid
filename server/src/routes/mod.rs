@@ -26,6 +26,7 @@ use self::login::Session;
 pub fn get(State(app_state): State<AppState>) -> axum::Router {
     axum::Router::new()
         .route("/recipe", axum::routing::get(recipe::get_all))
+        .route("/recipe", axum::routing::post(recipe::create))
         .route_layer(from_fn_with_state(app_state.clone(), auth_filter))
         .route("/health-check", axum::routing::get(()))
         .route(

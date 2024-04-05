@@ -6,7 +6,7 @@ use mongodb::{
 };
 
 use crate::{
-    constants::{DATABASE_NAME, DATABASE_SESSIONS, DATABASE_USERS},
+    constants::{DATABASE_NAME, DATABASE_RECIPES, DATABASE_SESSIONS, DATABASE_USERS},
     routes::User,
     utils::hash_password,
 };
@@ -62,6 +62,10 @@ async fn perform_migrations(client: &Client, config: &config::Config) -> anyhow:
                 None,
             )
             .await?;
+    };
+
+    if !databases.contains(&DATABASE_RECIPES.to_string()) {
+        database.create_collection(DATABASE_RECIPES, None).await?;
     };
 
     Ok(())
