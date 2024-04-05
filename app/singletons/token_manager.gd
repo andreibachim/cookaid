@@ -1,14 +1,13 @@
 extends Node
 
 const FILE_LOCATION = "user://token.dat"
-
 var secret = ""
 
 func _ready() -> void:
 	var request := HTTPRequest.new()
 	add_child(request)
-	request.request("http://localhost:8080/api/encryption-token")
-	var response_array = await request.request_completed
+	request.request((Variables.API_BASE_URL + "/api/encryption-token"))
+	var response_array = await request.request_2completed
 	var response: Dictionary = JSON.parse_string(response_array[3].get_string_from_utf8())
 	secret = response.get("secret")
 	

@@ -18,7 +18,7 @@ func recipes_screen():
 
 func token_is_valid(token: String) -> bool:
 	if (token.length() == 0): return false
-	request.request("http://localhost:8080/api/check-session", \
+	request.request(Variables.API_BASE_URL + "/api/check-session", \
 		["Content-Type: application/json"],\
 		HTTPClient.METHOD_POST,
 		JSON.stringify({"token": token})
