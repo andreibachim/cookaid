@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://csk18h5asasil"]
+
+[ext_resource type="Script" path="res://screens/edit_recipe/edit_recipe.gd" id="1_ae808"]
+
+[node name="recipes" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 32
+script = ExtResource("1_ae808")
+
+[node name="request" type="HTTPRequest" parent="."]
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="recipe_name" type="Label" parent="vbox"]
+layout_mode = 2
+
+[node name="description" type="TextEdit" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+placeholder_text = "recipe description"
+
+[node name="external_reference" type="LineEdit" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 2
+placeholder_text = "external reference"

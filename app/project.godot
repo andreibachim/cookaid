@@ -18,9 +18,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Variables="*res://singletons/variables.gd"
 TokenManager="*res://singletons/token_manager.gd"
 Navigator="*res://singletons/navigator.gd"
+State="*res://singletons/state.gd"
 
 [display]
 

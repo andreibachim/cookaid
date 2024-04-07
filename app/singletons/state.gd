@@ -1,5 +1,6 @@
 extends Node
 
+var TOKEN: String
 var API_BASE_URL: String
 
 func _ready():

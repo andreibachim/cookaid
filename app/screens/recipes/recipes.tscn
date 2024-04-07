@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://jmc68lbsflv0"]
+[gd_scene load_steps=3 format=3 uid="uid://jmc68lbsflv0"]
 
 [ext_resource type="Script" path="res://screens/recipes/recipes.gd" id="1_viaqw"]
+[ext_resource type="PackedScene" uid="uid://dwq6k16gy31ti" path="res://screens/recipes/recipes_list_item/recipes_list_item.tscn" id="2_tcrkf"]
 
 [node name="recipes" type="MarginContainer"]
 anchors_preset = 15
@@ -9,14 +10,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 64
 theme_override_constants/margin_right = 32
 script = ExtResource("1_viaqw")
+recipe_list_item_template = ExtResource("2_tcrkf")
 
-[node name="recipes_page" type="Label" parent="."]
+[node name="recipes_list" type="VBoxContainer" parent="."]
 layout_mode = 2
-text = "RECIPES PAGE"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_constants/separation = 32
 
 [node name="layer" type="CanvasLayer" parent="."]
 

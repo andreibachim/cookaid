@@ -12,7 +12,7 @@ func _on_submit_button_up():
 	}
 	
 	request.request(
-		Variables.API_BASE_URL + "/api/register", \
+		State.API_BASE_URL + "/api/register", \
 		["Content-Type: application/json"], \
 		HTTPClient.METHOD_POST, \
 		JSON.stringify(payload)

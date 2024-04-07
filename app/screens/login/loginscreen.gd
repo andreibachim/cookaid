@@ -12,7 +12,7 @@ func _on_submit_button_up():
 	}
 	
 	request.request(
-		Variables.API_BASE_URL + "/api/login", \
+		State.API_BASE_URL + "/api/login", \
 		["Content-Type: application/json"], \
 		HTTPClient.METHOD_POST, \
 		JSON.stringify(payload)

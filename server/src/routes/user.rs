@@ -30,4 +30,8 @@ impl User {
     pub fn password(&self) -> &str {
         &self.password
     }
+
+    pub fn recipes(self) -> Vec<ObjectId> {
+        self.recipes
+    }
 }

@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwq6k16gy31ti"]
+
+[ext_resource type="Script" path="res://screens/recipes/recipes_list_item/recipes_list_item.gd" id="1_s1n6y"]
+
+[node name="recipes_list_item" type="MarginContainer"]
+script = ExtResource("1_s1n6y")
+
+[node name="hbox" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="status" type="Label" parent="hbox"]
+layout_mode = 2
+
+[node name="link" type="Button" parent="hbox"]
+layout_mode = 2
+text = "placeholder"
+flat = true
+alignment = 0
+
+[connection signal="button_up" from="hbox/link" to="." method="_on_link_button_up"]

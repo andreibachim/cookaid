@@ -1,37 +1,40 @@
 extends Node
 
 const FILE_LOCATION = "user://token.dat"
-var secret = ""
 
-func _ready() -> void:
-	var request := HTTPRequest.new()
-	add_child(request)
-	request.request(Variables.API_BASE_URL + "/api/encryption-token")
-	var response_array = await request.request_completed
-	var response: Dictionary = JSON.parse_string(response_array[3].get_string_from_utf8())
-	secret = response.get("secret")
-	
-func save_token(token: String) -> void:
-	var file = FileAccess.open_encrypted_with_pass(FILE_LOCATION,\
-		FileAccess.WRITE,\
-		secret);
+func save_token(token: String) -> Error:
+	var file = FileAccess.open(FILE_LOCATION, FileAccess.WRITE)
+	if file == null:
+		return FileAccess.get_open_error()
 	file.store_string(token)
 	file.close()
-
-func get_token() -> String:
-	if (FileAccess.file_exists(FILE_LOCATION)):
-		var file = FileAccess.open_encrypted_with_pass(FILE_LOCATION,\
-			FileAccess.READ,\
-			secret);
-		if file == null: 
-			delete_token()
-			return ""
-		var token = file.get_as_text()
-		file.close()
-		return token
-	else:
-		return ""
-
+	State.TOKEN = token
+	return OK
+	
+func load_token() -> String:
+	var file= FileAccess.open(FILE_LOCATION, FileAccess.READ)
+	var token = file.get_as_text() if file != null else ""
+	State.TOKEN = token
+	return token
+	
 func delete_token() -> void:
-	if (FileAccess.file_exists(FILE_LOCATION)):
-		DirAccess.remove_absolute(FILE_LOCATION)
+	var result: Error = DirAccess.remove_absolute(FILE_LOCATION)
+	assert(result == OK, "Could not delete the token file")
+	
+func token_is_valid(token: String) -> bool:
+	if (token.length() == 0): return false
+	var request = HTTPRequest.new()
+	add_child(request)
+	request.request(State.API_BASE_URL + "/api/check-session", \
+		["Content-Type: application/json"],\
+		HTTPClient.METHOD_POST,
+		JSON.stringify({"token": token})
+	)
+	var response = await request.request_completed
+	request.queue_free.call_deferred()
+	match response[1]:
+		200: return true
+		_: 
+			TokenManager.delete_token()
+			return false
+	
