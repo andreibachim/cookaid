@@ -8,9 +8,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 32
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
 script = ExtResource("1_ae808")
 
 [node name="request" type="HTTPRequest" parent="."]
@@ -18,6 +18,22 @@ script = ExtResource("1_ae808")
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
 theme_override_constants/separation = 32
+
+[node name="header" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="back" type="Button" parent="vbox/header"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "Back"
+flat = true
+
+[node name="save" type="Button" parent="vbox/header"]
+layout_mode = 2
+size_flags_horizontal = 10
+mouse_default_cursor_shape = 2
+text = "Save"
+flat = true
 
 [node name="recipe_name" type="Label" parent="vbox"]
 layout_mode = 2
@@ -32,3 +48,6 @@ placeholder_text = "recipe description"
 layout_mode = 2
 size_flags_vertical = 2
 placeholder_text = "external reference"
+
+[connection signal="button_up" from="vbox/header/back" to="." method="_on_back_button_up"]
+[connection signal="button_up" from="vbox/header/save" to="." method="_on_save_button_up"]

@@ -27,6 +27,7 @@ pub fn get(State(app_state): State<AppState>) -> axum::Router {
     axum::Router::new()
         .route("/recipe", axum::routing::get(recipe::get_all))
         .route("/recipe", axum::routing::post(recipe::create))
+        .route("/recipe/:recipe_id", axum::routing::put(recipe::update))
         .route("/recipe/:recipe_id", axum::routing::get(recipe::get))
         .route_layer(from_fn_with_state(app_state.clone(), auth_filter))
         .route("/health-check", axum::routing::get(()))

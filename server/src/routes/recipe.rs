@@ -7,7 +7,7 @@ use axum::{
     Extension, Json,
 };
 use mongodb::{
-    bson::{doc, oid::ObjectId},
+    bson::{bson, doc, oid::ObjectId, Document},
     ClientSession,
 };
 use serde::{Deserialize, Serialize};
@@ -23,7 +23,6 @@ pub async fn get(
     State(state): State<AppState>,
     Path(recipe_id): Path<String>,
 ) -> impl IntoResponse {
-    println!("{}", recipe_id);
     let database = state.mongo_client.database(DATABASE_NAME);
     match database
         .collection::<Recipe>(DATABASE_RECIPES)
@@ -144,6 +143,51 @@ async fn insert_recipe_transaction(
         .to_string())
 }
 
+pub async fn update(
+    State(state): State<AppState>,
+    Extension(session): Extension<Session>,
+    Path(recipe_id): Path<String>,
+    Json(payload): Json<UpdateRecipeRequest>,
+) -> impl IntoResponse {
+    let recipe_id = match ObjectId::parse_str(recipe_id) {
+        Ok(id) => id,
+        Err(error) => {
+            log::error!(
+                "Could not process recipe_id path segment. Reason: {}",
+                error
+            );
+            return StatusCode::BAD_REQUEST.into_response();
+        }
+    };
+
+    //Update the recipe in the database
+    match state
+        .mongo_client
+        .database(DATABASE_NAME)
+        .collection::<Recipe>(DATABASE_RECIPES)
+        .update_one(
+            doc! {"_id": recipe_id },
+            doc! { "$set": {
+                    "name": payload.name,
+                    "description": payload.description,
+                    "external_reference": payload.external_reference,
+                    "ingredients": payload.ingredients,
+                    "steps": payload.steps,
+                }
+            },
+            None,
+        )
+        .await
+    {
+        Ok(_) => StatusCode::OK,
+        Err(error) => {
+            log::error!("Could not update recipe. Reason: {}", error);
+            StatusCode::INTERNAL_SERVER_ERROR
+        }
+    }
+    .into_response()
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateRecipeRequest {
     name: String,
@@ -152,6 +196,15 @@ pub struct CreateRecipeRequest {
 #[derive(Serialize)]
 pub struct CreateRecipeResponse {
     recipe_id: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UpdateRecipeRequest {
+    description: String,
+    external_reference: String,
+    name: String,
+    ingredients: Vec<String>,
+    steps: Vec<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -164,12 +217,6 @@ pub struct Recipe {
     external_reference: Option<String>,
     ingredients: Vec<String>,
     steps: Vec<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-enum RecipeStatus {
-    DRAFT,
-    COMPLETED,
 }
 
 impl Recipe {
@@ -186,6 +233,13 @@ impl Recipe {
         }
     }
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+enum RecipeStatus {
+    DRAFT,
+    COMPLETED,
+}
+
 #[derive(Serialize)]
 pub struct OutgoingRecipe {
     name: String,
