@@ -1,9 +1,31 @@
-[gd_scene format=3 uid="uid://djn3b28xhs4pb"]
+[gd_scene load_steps=2 format=3 uid="uid://djn3b28xhs4pb"]
 
-[node name="ingredient" type="LineEdit"]
-offset_right = 67.0625
+[ext_resource type="Script" path="res://components/ingredient/ingredient.gd" id="1_yt6vf"]
+
+[node name="ingredient" type="MarginContainer"]
+anchors_preset = 10
+anchor_right = 1.0
 offset_bottom = 31.0
+grow_horizontal = 2
+script = ExtResource("1_yt6vf")
+
+[node name="hbox" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="input" type="LineEdit" parent="hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "ingredient"
 editable = false
-expand_to_text_length = true
-caret_blink = true
-caret_blink_interval = 0.5
+
+[node name="edit" type="Button" parent="hbox"]
+layout_mode = 2
+text = "Edit"
+
+[node name="delete" type="Button" parent="hbox"]
+layout_mode = 2
+text = "Delete"
+
+[node name="request" type="HTTPRequest" parent="."]
+
+[connection signal="button_up" from="hbox/delete" to="." method="_on_delete_button_up"]

@@ -17,7 +17,7 @@ func _on_add_ingredient_button_button_up():
 
 func add_ingredient(ingredient: Dictionary):
 	var ingredient_label = ingredient_template.instantiate()
-	ingredient_label.text = ingredient.name
+	ingredient_label.set_ingredient(ingredient, recipe_id)
 	list.add_child.call_deferred(ingredient_label)
 
 func perform_request(ingredient: String) -> void:
