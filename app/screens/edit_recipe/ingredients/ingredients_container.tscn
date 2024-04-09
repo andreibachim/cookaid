@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://n8d8estcjfnu"]
+
+[ext_resource type="Script" path="res://screens/edit_recipe/ingredients/ingredients_container.gd" id="1_t3vix"]
+
+[node name="ingredients_container" type="VBoxContainer"]
+size_flags_vertical = 2
+theme_override_constants/separation = 8
+script = ExtResource("1_t3vix")
+
+[node name="request" type="HTTPRequest" parent="."]
+
+[node name="label" type="RichTextLabel" parent="."]
+layout_mode = 2
+bbcode_enabled = true
+text = "[i]Ingredients[/i]"
+fit_content = true
+
+[node name="ingredients_form" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ingredients_input" type="LineEdit" parent="ingredients_form"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "add ingredient"
+
+[node name="add_ingredient_button" type="Button" parent="ingredients_form"]
+layout_mode = 2
+text = "  Add  "
+
+[node name="ingredients_list" type="HFlowContainer" parent="."]
+layout_mode = 2
+
+[connection signal="button_up" from="ingredients_form/add_ingredient_button" to="." method="_on_add_ingredient_button_button_up"]

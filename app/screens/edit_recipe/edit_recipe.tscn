@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://csk18h5asasil"]
+[gd_scene load_steps=5 format=3 uid="uid://csk18h5asasil"]
 
 [ext_resource type="Script" path="res://screens/edit_recipe/edit_recipe.gd" id="1_ae808"]
+[ext_resource type="PackedScene" uid="uid://n8d8estcjfnu" path="res://screens/edit_recipe/ingredients/ingredients_container.tscn" id="2_ag0nn"]
+[ext_resource type="PackedScene" uid="uid://d3v0jgupdmfx8" path="res://components/input/input.tscn" id="2_q3ntb"]
+[ext_resource type="PackedScene" uid="uid://bguihh7vj4201" path="res://components/multi_line_input/multi_line_input.tscn" id="3_o8yjy"]
 
 [node name="recipes" type="MarginContainer"]
 anchors_preset = 15
@@ -28,26 +31,23 @@ mouse_default_cursor_shape = 2
 text = "Back"
 flat = true
 
-[node name="save" type="Button" parent="vbox/header"]
+[node name="recipe_name" parent="vbox" instance=ExtResource("2_q3ntb")]
 layout_mode = 2
-size_flags_horizontal = 10
-mouse_default_cursor_shape = 2
-text = "Save"
 flat = true
+placeholder_text = "recipe name"
 
-[node name="recipe_name" type="Label" parent="vbox"]
+[node name="external_reference" parent="vbox" instance=ExtResource("2_q3ntb")]
 layout_mode = 2
+placeholder_text = "link to source"
 
-[node name="description" type="TextEdit" parent="vbox"]
+[node name="description" parent="vbox" instance=ExtResource("3_o8yjy")]
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.2
-placeholder_text = "recipe description"
+placeholder = "add recipe description"
 
-[node name="external_reference" type="LineEdit" parent="vbox"]
+[node name="ingredients_container" parent="vbox" instance=ExtResource("2_ag0nn")]
 layout_mode = 2
-size_flags_vertical = 2
-placeholder_text = "external reference"
 
 [connection signal="button_up" from="vbox/header/back" to="." method="_on_back_button_up"]
-[connection signal="button_up" from="vbox/header/save" to="." method="_on_save_button_up"]
+[connection signal="text_changed" from="vbox/recipe_name" to="." method="_on_recipe_name_text_changed"]
+[connection signal="text_changed" from="vbox/external_reference" to="." method="_on_external_reference_text_changed"]
+[connection signal="text_changed" from="vbox/description" to="." method="_on_description_text_changed"]

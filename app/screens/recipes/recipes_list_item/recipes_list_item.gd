@@ -5,7 +5,6 @@ extends MarginContainer
 @onready var title := $hbox/title
 var recipe_id: String
 
-
 func set_up(recipe: Dictionary) -> void:
 	if recipe.status == "DRAFT":
 		status.text = "[DRAFT]"

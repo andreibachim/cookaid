@@ -1,7 +1,7 @@
 extends MarginContainer
 
 @onready var request = $request
-
+@onready var ingredients_container = $vbox/ingredients_container
 @onready var recipe_name = $vbox/recipe_name
 @onready var description = $vbox/description
 @onready var external_reference = $vbox/external_reference
@@ -9,6 +9,7 @@ extends MarginContainer
 var recipe_id = Navigator.next_recipe_id
 
 func _ready() -> void:
+	ingredients_container.recipe_id = recipe_id
 	request.request(State.API_BASE_URL + "/api/recipe/" + recipe_id,\
 		["Authorization: Bearer " + State.TOKEN])
 	var response_array = await request.request_completed
@@ -25,30 +26,42 @@ func _ready() -> void:
 			print("Server error")
 			
 func process_response(response: Dictionary) -> void:
-	recipe_name.text = response.name
+	recipe_name.set_text(response.name)
 	if response.description != null:
-		description.text = response.description
+		description.set_text(response.description)
 	if response.external_reference != null:
-		external_reference.text = response.external_reference
+		external_reference.set_text(response.external_reference)
+	for ingredient in response.ingredients:
+		ingredients_container.add_ingredient(ingredient)
 
 func _on_back_button_up():
 	Navigator.load_recipes_screen()
-
-func _on_save_button_up():
-	var payload: Dictionary = {
-		"name": recipe_name.text,
-		"description": description.text,
-		"external_reference": external_reference.text,
-		"ingredients": [],
-		"steps": [],
-	}
-	print(JSON.stringify(payload))
-	request.request(State.API_BASE_URL + "/api/recipe/" + recipe_id,\
-	["Authorization: Bearer " + State.TOKEN, "Content-Type: application/json"],\
-	HTTPClient.METHOD_PUT,\
-	JSON.stringify(payload))
-	var response_array = await request.request_completed
+	
+func _on_recipe_name_text_changed(value):
+	var payload = { "name": value }
+	var response_array = await perform_request(JSON.stringify(payload))
 	var status_code = response_array[1]
 	match status_code:
-		200: print("Sugges")
-		_: print("Failure because of status code: " + str(status_code))
+		200: recipe_name.commit_name()
+		_: recipe_name.revert_name()
+		
+func _on_external_reference_text_changed(value):
+	var payload = { "external_reference": value }
+	var response_array = await perform_request(JSON.stringify(payload))
+	match response_array[1]:
+		200: external_reference.commit_name()
+		_: external_reference.revert_name()
+		
+func _on_description_text_changed(value):
+	var payload = { "description": value }
+	var response_array = await perform_request(JSON.stringify(payload))
+	match response_array[1]:
+		200: description.commit()
+		_: description.revert()
+		
+func perform_request(payload: String) -> Array:
+	request.request(State.API_BASE_URL + "/api/recipe/" + recipe_id,\
+		["Content-Type: application/json", "Authorization: Bearer " + State.TOKEN],\
+		HTTPClient.METHOD_PUT,
+		payload)
+	return await request.request_completed

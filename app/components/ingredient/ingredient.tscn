@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://djn3b28xhs4pb"]
+
+[node name="ingredient" type="LineEdit"]
+offset_right = 67.0625
+offset_bottom = 31.0
+editable = false
+expand_to_text_length = true
+caret_blink = true
+caret_blink_interval = 0.5

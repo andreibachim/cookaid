@@ -7,7 +7,7 @@ use axum::{
     Extension, Json,
 };
 use mongodb::{
-    bson::{bson, doc, oid::ObjectId, Document},
+    bson::{doc, oid::ObjectId, Document},
     ClientSession,
 };
 use serde::{Deserialize, Serialize};
@@ -17,7 +17,11 @@ use crate::{
     AppState,
 };
 
-use super::{login::Session, User};
+use super::{
+    ingredient::{Ingredient, OutgoingIngredientDetails},
+    login::Session,
+    User,
+};
 
 pub async fn get(
     State(state): State<AppState>,
@@ -33,7 +37,7 @@ pub async fn get(
         .await
     {
         Ok(recipe_option) => match recipe_option {
-            Some(recipe) => Json(recipe).into_response(),
+            Some(recipe) => Json(OutgoingRecipeDetails::from(recipe)).into_response(),
             None => StatusCode::NOT_FOUND.into_response(),
         },
         Err(error) => {
@@ -136,10 +140,9 @@ async fn insert_recipe_transaction(
             session,
         )
         .await?;
-
     Ok(recipe_id
         .as_object_id()
-        .expect("Could not get objectId")
+        .expect("Could not convert to ObjectId")
         .to_string())
 }
 
@@ -166,20 +169,19 @@ pub async fn update(
         .database(DATABASE_NAME)
         .collection::<Recipe>(DATABASE_RECIPES)
         .update_one(
-            doc! {"_id": recipe_id },
-            doc! { "$set": {
-                    "name": payload.name,
-                    "description": payload.description,
-                    "external_reference": payload.external_reference,
-                    "ingredients": payload.ingredients,
-                    "steps": payload.steps,
-                }
-            },
+            doc! {"_id": recipe_id, "owner": session.user_object_id() },
+            doc! { "$set": Document::from(payload) },
             None,
         )
         .await
     {
-        Ok(_) => StatusCode::OK,
+        Ok(result) => {
+            if result.matched_count == 0 || result.modified_count == 0 {
+                StatusCode::NOT_FOUND
+            } else {
+                StatusCode::OK
+            }
+        }
         Err(error) => {
             log::error!("Could not update recipe. Reason: {}", error);
             StatusCode::INTERNAL_SERVER_ERROR
@@ -200,11 +202,27 @@ pub struct CreateRecipeResponse {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UpdateRecipeRequest {
-    description: String,
-    external_reference: String,
-    name: String,
-    ingredients: Vec<String>,
-    steps: Vec<String>,
+    description: Option<String>,
+    external_reference: Option<String>,
+    name: Option<String>,
+}
+
+impl From<UpdateRecipeRequest> for Document {
+    fn from(value: UpdateRecipeRequest) -> Self {
+        let mut document = Self::new();
+        if value.name.is_some() {
+            document.insert("name", value.name);
+        }
+
+        if value.description.is_some() {
+            document.insert("description", value.description);
+        }
+
+        if value.external_reference.is_some() {
+            document.insert("external_reference", value.external_reference);
+        }
+        document
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -215,7 +233,7 @@ pub struct Recipe {
     name: String,
     description: Option<String>,
     external_reference: Option<String>,
-    ingredients: Vec<String>,
+    ingredients: Vec<Ingredient>,
     steps: Vec<String>,
 }
 
@@ -238,6 +256,35 @@ impl Recipe {
 enum RecipeStatus {
     DRAFT,
     COMPLETED,
+}
+
+#[derive(Serialize)]
+pub struct OutgoingRecipeDetails {
+    id: String,
+    status: RecipeStatus,
+    name: String,
+    description: Option<String>,
+    external_reference: Option<String>,
+    ingredients: Vec<OutgoingIngredientDetails>,
+    steps: Vec<String>,
+}
+
+impl From<Recipe> for OutgoingRecipeDetails {
+    fn from(value: Recipe) -> Self {
+        Self {
+            id: value._id.to_string(),
+            status: value.status,
+            name: value.name,
+            description: value.description,
+            external_reference: value.external_reference,
+            ingredients: value
+                .ingredients
+                .into_iter()
+                .map(|ingredient| OutgoingIngredientDetails::from(ingredient))
+                .collect(),
+            steps: value.steps,
+        }
+    }
 }
 
 #[derive(Serialize)]

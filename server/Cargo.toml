@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.81"
 axum = "0.7.5"
+bson = "2.10.0"
 config = { version = "0.14.0", features = ["toml"] }
 env_logger = "0.11.3"
 log = "0.4.21"
