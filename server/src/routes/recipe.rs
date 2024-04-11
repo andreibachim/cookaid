@@ -20,6 +20,7 @@ use crate::{
 use super::{
     ingredient::{Ingredient, OutgoingIngredientDetails},
     login::Session,
+    step::{OutgoingStep, Step},
     User,
 };
 
@@ -152,7 +153,7 @@ pub async fn update(
     Path(recipe_id): Path<String>,
     Json(payload): Json<UpdateRecipeRequest>,
 ) -> impl IntoResponse {
-    let recipe_id = match ObjectId::parse_str(recipe_id) {
+    let recipe_id = match ObjectId::from_str(&recipe_id) {
         Ok(id) => id,
         Err(error) => {
             log::error!(
@@ -234,7 +235,7 @@ pub struct Recipe {
     description: Option<String>,
     external_reference: Option<String>,
     ingredients: Vec<Ingredient>,
-    steps: Vec<String>,
+    steps: Vec<Step>,
 }
 
 impl Recipe {
@@ -266,7 +267,7 @@ pub struct OutgoingRecipeDetails {
     description: Option<String>,
     external_reference: Option<String>,
     ingredients: Vec<OutgoingIngredientDetails>,
-    steps: Vec<String>,
+    steps: Vec<OutgoingStep>,
 }
 
 impl From<Recipe> for OutgoingRecipeDetails {
@@ -280,9 +281,9 @@ impl From<Recipe> for OutgoingRecipeDetails {
             ingredients: value
                 .ingredients
                 .into_iter()
-                .map(|ingredient| OutgoingIngredientDetails::from(ingredient))
+                .map(OutgoingIngredientDetails::from)
                 .collect(),
-            steps: value.steps,
+            steps: value.steps.into_iter().map(OutgoingStep::from).collect(),
         }
     }
 }

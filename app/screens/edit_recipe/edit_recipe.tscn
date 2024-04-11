@@ -5,49 +5,55 @@
 [ext_resource type="PackedScene" uid="uid://d3v0jgupdmfx8" path="res://components/input/input.tscn" id="2_q3ntb"]
 [ext_resource type="PackedScene" uid="uid://bguihh7vj4201" path="res://components/multi_line_input/multi_line_input.tscn" id="3_o8yjy"]
 
-[node name="recipes" type="MarginContainer"]
+[node name="recipes" type="ScrollContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
 script = ExtResource("1_ae808")
 
-[node name="request" type="HTTPRequest" parent="."]
-
-[node name="vbox" type="VBoxContainer" parent="."]
+[node name="scroll" type="MarginContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="vbox" type="VBoxContainer" parent="scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 32
 
-[node name="header" type="HBoxContainer" parent="vbox"]
+[node name="header" type="HBoxContainer" parent="scroll/vbox"]
 layout_mode = 2
 
-[node name="back" type="Button" parent="vbox/header"]
+[node name="back" type="Button" parent="scroll/vbox/header"]
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "Back"
 flat = true
 
-[node name="recipe_name" parent="vbox" instance=ExtResource("2_q3ntb")]
+[node name="recipe_name" parent="scroll/vbox" instance=ExtResource("2_q3ntb")]
 layout_mode = 2
 flat = true
 placeholder_text = "recipe name"
 
-[node name="external_reference" parent="vbox" instance=ExtResource("2_q3ntb")]
+[node name="external_reference" parent="scroll/vbox" instance=ExtResource("2_q3ntb")]
 layout_mode = 2
 placeholder_text = "link to source"
 
-[node name="description" parent="vbox" instance=ExtResource("3_o8yjy")]
+[node name="description" parent="scroll/vbox" instance=ExtResource("3_o8yjy")]
 layout_mode = 2
 placeholder = "add recipe description"
 
-[node name="ingredients_container" parent="vbox" instance=ExtResource("2_ag0nn")]
+[node name="ingredients_container" parent="scroll/vbox" instance=ExtResource("2_ag0nn")]
 layout_mode = 2
 
-[connection signal="button_up" from="vbox/header/back" to="." method="_on_back_button_up"]
-[connection signal="text_changed" from="vbox/recipe_name" to="." method="_on_recipe_name_text_changed"]
-[connection signal="text_changed" from="vbox/external_reference" to="." method="_on_external_reference_text_changed"]
-[connection signal="text_changed" from="vbox/description" to="." method="_on_description_text_changed"]
+[node name="request" type="HTTPRequest" parent="."]
+
+[connection signal="button_up" from="scroll/vbox/header/back" to="." method="_on_back_button_up"]
+[connection signal="text_changed" from="scroll/vbox/recipe_name" to="." method="_on_recipe_name_text_changed"]
+[connection signal="text_changed" from="scroll/vbox/external_reference" to="." method="_on_external_reference_text_changed"]
+[connection signal="text_changed" from="scroll/vbox/description" to="." method="_on_description_text_changed"]

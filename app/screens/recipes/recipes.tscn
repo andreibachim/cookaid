@@ -3,25 +3,31 @@
 [ext_resource type="Script" path="res://screens/recipes/recipes.gd" id="1_viaqw"]
 [ext_resource type="PackedScene" uid="uid://dwq6k16gy31ti" path="res://screens/recipes/recipes_list_item/recipes_list_item.tscn" id="2_tcrkf"]
 
-[node name="recipes" type="MarginContainer"]
+[node name="recipes" type="ScrollContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 32
 script = ExtResource("1_viaqw")
 recipe_list_item_template = ExtResource("2_tcrkf")
 
-[node name="recipes_list" type="VBoxContainer" parent="."]
+[node name="margin" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="recipes_list" type="VBoxContainer" parent="margin"]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="layer" type="CanvasLayer" parent="."]
+[node name="layer" type="CanvasLayer" parent="margin"]
 
-[node name="margin" type="MarginContainer" parent="layer"]
+[node name="margin" type="MarginContainer" parent="margin/layer"]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -34,15 +40,15 @@ grow_vertical = 0
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 32
 
-[node name="new_recipe" type="Button" parent="layer/margin"]
+[node name="new_recipe" type="Button" parent="margin/layer/margin"]
 layout_mode = 2
 text = "  +  "
 
-[node name="popup" type="Popup" parent="."]
+[node name="popup" type="Popup" parent="margin"]
 initial_position = 2
 size = Vector2i(320, 400)
 
-[node name="background" type="ColorRect" parent="popup"]
+[node name="background" type="ColorRect" parent="margin/popup"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -50,7 +56,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.160784, 0.160784, 0.160784, 1)
 
-[node name="margin" type="MarginContainer" parent="popup/background"]
+[node name="margin" type="MarginContainer" parent="margin/popup/background"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,29 +68,29 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="vbox" type="VBoxContainer" parent="popup/background/margin"]
+[node name="vbox" type="VBoxContainer" parent="margin/popup/background/margin"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 16
 
-[node name="label" type="Label" parent="popup/background/margin/vbox"]
+[node name="label" type="Label" parent="margin/popup/background/margin/vbox"]
 layout_mode = 2
 text = "Name your new recipe"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="recipe_name_input" type="LineEdit" parent="popup/background/margin/vbox"]
+[node name="recipe_name_input" type="LineEdit" parent="margin/popup/background/margin/vbox"]
 layout_mode = 2
 placeholder_text = "recipe name"
 
-[node name="create_button" type="Button" parent="popup/background/margin/vbox"]
+[node name="create_button" type="Button" parent="margin/popup/background/margin/vbox"]
 layout_mode = 2
 text = "Create"
 
-[node name="cancel_button" type="Button" parent="popup/background/margin/vbox"]
+[node name="cancel_button" type="Button" parent="margin/popup/background/margin/vbox"]
 layout_mode = 2
 text = "Cancel"
 
-[connection signal="button_up" from="layer/margin/new_recipe" to="." method="_on_new_recipe_button_up"]
-[connection signal="button_up" from="popup/background/margin/vbox/create_button" to="." method="_on_create_button_button_up"]
-[connection signal="button_up" from="popup/background/margin/vbox/cancel_button" to="." method="_on_cancel_button_button_up"]
+[connection signal="button_up" from="margin/layer/margin/new_recipe" to="." method="_on_new_recipe_button_up"]
+[connection signal="button_up" from="margin/popup/background/margin/vbox/create_button" to="." method="_on_create_button_button_up"]
+[connection signal="button_up" from="margin/popup/background/margin/vbox/cancel_button" to="." method="_on_cancel_button_button_up"]

@@ -1,12 +1,11 @@
-extends MarginContainer
+extends ScrollContainer
 
-@onready var popup = $popup
+@onready var popup = $margin/popup
 @onready var request: HTTPRequest = HTTPRequest.new()
 
-@onready var recipe_name_input = $popup/background/margin/vbox/recipe_name_input
-
+@onready var recipe_name_input = $margin/popup/background/margin/vbox/recipe_name_input
 @export var recipe_list_item_template: PackedScene
-@onready var recipes_list = $recipes_list
+@onready var recipes_list = $margin/recipes_list
 
 func _ready():
 	popup.visible = false

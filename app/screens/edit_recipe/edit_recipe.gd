@@ -1,10 +1,10 @@
-extends MarginContainer
+extends ScrollContainer
 
 @onready var request = $request
-@onready var ingredients_container = $vbox/ingredients_container
-@onready var recipe_name = $vbox/recipe_name
-@onready var description = $vbox/description
-@onready var external_reference = $vbox/external_reference
+@onready var ingredients_container = $scroll/vbox/ingredients_container
+@onready var recipe_name = $scroll/vbox/recipe_name
+@onready var description = $scroll/vbox/description
+@onready var external_reference = $scroll/vbox/external_reference
 
 var recipe_id = Navigator.next_recipe_id
 

@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://djn3b28xhs4pb"]
+[gd_scene load_steps=5 format=3 uid="uid://djn3b28xhs4pb"]
 
 [ext_resource type="Script" path="res://components/ingredient/ingredient.gd" id="1_yt6vf"]
+[ext_resource type="Texture2D" uid="uid://cautbk2yjnf2a" path="res://assets/icons/edit.svg" id="2_65as8"]
+[ext_resource type="Texture2D" uid="uid://ch1nnob7ofj54" path="res://assets/icons/delete.svg" id="3_e0tst"]
+[ext_resource type="Texture2D" uid="uid://dcicrhjolde21" path="res://assets/icons/save.svg" id="3_q2hwg"]
 
 [node name="ingredient" type="MarginContainer"]
 anchors_preset = 10
@@ -21,16 +24,25 @@ editable = false
 
 [node name="edit" type="Button" parent="hbox"]
 layout_mode = 2
-text = "Edit"
+text = "     "
+icon = ExtResource("2_65as8")
+icon_alignment = 1
+expand_icon = true
 
 [node name="save" type="Button" parent="hbox"]
 visible = false
 layout_mode = 2
-text = "Save"
+text = "     "
+icon = ExtResource("3_q2hwg")
+icon_alignment = 1
+expand_icon = true
 
 [node name="delete" type="Button" parent="hbox"]
 layout_mode = 2
-text = "Delete"
+text = "     "
+icon = ExtResource("3_e0tst")
+icon_alignment = 1
+expand_icon = true
 
 [node name="request" type="HTTPRequest" parent="."]
 
