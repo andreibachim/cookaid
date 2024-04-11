@@ -19,7 +19,7 @@ pub async fn create(
     State(state): State<AppState>,
     Extension(session): Extension<Session>,
     Path(recipe_id): Path<String>,
-    Json(payload): Json<IngredientAddRequest>,
+    Json(payload): Json<IngredientIncomingRequest>,
 ) -> impl IntoResponse {
     let recipe_id = match ObjectId::parse_str(recipe_id) {
         Ok(recipe_id) => recipe_id,
@@ -112,6 +112,52 @@ pub async fn delete(
     }
 }
 
+pub async fn update(
+    State(state): State<AppState>,
+    Extension(session): Extension<Session>,
+    Path(params): Path<(String, String)>,
+    Json(payload): Json<IngredientIncomingRequest>,
+) -> impl IntoResponse {
+    let (recipe_id, ingredient_id) = params;
+    let recipe_id = match ObjectId::parse_str(recipe_id) {
+        Ok(id) => id,
+        Err(error) => {
+            log::error!("Could not parse recipe ID string. Reason: {}", error);
+            return StatusCode::INTERNAL_SERVER_ERROR;
+        }
+    };
+
+    let ingredient_id = match ObjectId::parse_str(ingredient_id) {
+        Ok(id) => id,
+        Err(error) => {
+            log::error!("Could not parse ingredient ID string. Reason: {}", error);
+            return StatusCode::INTERNAL_SERVER_ERROR;
+        }
+    };
+
+    let update_options = mongodb::options::UpdateOptions::builder()
+        .array_filters(vec![doc! {"ingredient._id": ingredient_id}])
+        .build();
+
+    match state.mongo_client.database(DATABASE_NAME)
+        .collection::<Recipe>(DATABASE_RECIPES)
+        .update_one(doc! {"_id": recipe_id, "owner": session.user_object_id(), "ingredients._id": ingredient_id }, 
+            doc! { "$set": { "ingredients.$[ingredient].name": payload.name }}, 
+            update_options).await {
+            Ok(result) => {
+                if result.matched_count == 0 || result.modified_count == 0 { 
+                    StatusCode::NOT_FOUND 
+                } else { 
+                    StatusCode::OK
+                }
+            },
+            Err(error) => {
+                log::error!("Could not update ingredient name. Reason: {}", error);
+                StatusCode::INTERNAL_SERVER_ERROR
+            }
+        }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Ingredient {
     _id: ObjectId,
@@ -119,7 +165,7 @@ pub struct Ingredient {
 }
 
 impl Ingredient {
-    fn from(value: IngredientAddRequest) -> anyhow::Result<Self> {
+    fn from(value: IngredientIncomingRequest) -> anyhow::Result<Self> {
         let _id = ObjectId::new();
         if value.name.is_empty() {
             return Err(anyhow!("Ingredient name is empty"));
@@ -130,7 +176,7 @@ impl Ingredient {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct IngredientAddRequest {
+pub struct IngredientIncomingRequest {
     name: String,
 }
 

@@ -38,6 +38,10 @@ pub fn get(State(app_state): State<AppState>) -> axum::Router {
             "/recipe/:recipe_id/ingredient/:ingredient_id",
             axum::routing::delete(ingredient::delete),
         )
+        .route(
+            "/recipe/:recipe_id/ingredient/:ingredient_id",
+            axum::routing::put(ingredient::update),
+        )
         .route_layer(from_fn_with_state(app_state.clone(), auth_filter))
         .route("/health-check", axum::routing::get(()))
         .route(
