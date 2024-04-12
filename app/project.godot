@@ -27,7 +27,9 @@ State="*res://singletons/state.gd"
 window/size/viewport_width=360
 window/size/viewport_height=800
 window/stretch/mode="viewport"
+window/handheld/orientation=1
 
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

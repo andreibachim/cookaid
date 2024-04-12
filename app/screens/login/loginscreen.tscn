@@ -35,10 +35,12 @@ theme_override_constants/separation = 32
 [node name="email_input" type="LineEdit" parent="vbox/login_form"]
 layout_mode = 2
 placeholder_text = "email address"
+virtual_keyboard_type = 5
 
 [node name="password_input" type="LineEdit" parent="vbox/login_form"]
 layout_mode = 2
 placeholder_text = "password"
+virtual_keyboard_type = 6
 secret = true
 
 [node name="submit" type="Button" parent="vbox/login_form"]
