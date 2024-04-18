@@ -11,16 +11,15 @@ config_version=5
 [application]
 
 config/name="app"
-run/main_scene="res://slashscreen.tscn"
+run/main_scene="res://views/splash/splash.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [autoload]
 
-TokenManager="*res://singletons/token_manager.gd"
+Config="*res://singletons/config.gd"
 Navigator="*res://singletons/navigator.gd"
-State="*res://singletons/state.gd"
 
 [display]
 

@@ -191,6 +191,47 @@ pub async fn update(
     .into_response()
 }
 
+pub async fn remove(
+    State(state): State<AppState>,
+    Extension(session): Extension<Session>,
+    Path(recipe_id): Path<String>,
+) -> impl IntoResponse {
+    let recipe_id = match ObjectId::from_str(&recipe_id) {
+        Ok(object_id) => object_id,
+        Err(error) => {
+            log::error!(
+                "Could not process recipe_id path segment. Reason: {}",
+                error
+            );
+            return StatusCode::INTERNAL_SERVER_ERROR;
+        }
+    };
+
+    match state
+        .mongo_client
+        .database(DATABASE_NAME)
+        .collection::<Recipe>(DATABASE_RECIPES)
+        .delete_one(
+            doc! {"_id": recipe_id, "owner": session.user_object_id()},
+            None,
+        )
+        .await
+    {
+        Ok(result) => {
+            log::info!("{:#?}", result);
+            StatusCode::OK
+        }
+        Err(error) => {
+            log::error!(
+                "Could not delete recipe {}. Reason: {}",
+                recipe_id.to_string(),
+                error
+            );
+            StatusCode::INTERNAL_SERVER_ERROR
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateRecipeRequest {
     name: String,

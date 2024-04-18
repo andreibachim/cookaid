@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://b2q8kk6y1h74e"]
+
+[ext_resource type="Script" path="res://views/recipe/list_view/list_item/list_item.gd" id="1_0u8tw"]
+[ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="2_wqw7i"]
+
+[node name="list_item" type="MarginContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+script = ExtResource("1_0u8tw")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="title" type="Label" parent="vbox"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "recipe name"
+
+[node name="actions" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="delete" parent="vbox/actions" instance=ExtResource("2_wqw7i")]
+layout_mode = 2
+text = "delete"
+
+[node name="edit" parent="vbox/actions" instance=ExtResource("2_wqw7i")]
+layout_mode = 2
+text = "edit"
+
+[node name="cook" parent="vbox/actions" instance=ExtResource("2_wqw7i")]
+layout_mode = 2
+text = "cook"
+
+[node name="separator" type="HSeparator" parent="vbox"]
+layout_mode = 2
+
+[node name="http_client" type="HTTPRequest" parent="."]
+
+[connection signal="button_up" from="vbox/actions/delete" to="." method="_on_delete_button_up"]

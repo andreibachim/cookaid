@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://frcobc43iij4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gbu4x"]
+
+[node name="button" type="Button"]
+mouse_default_cursor_shape = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gbu4x")

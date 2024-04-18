@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://cen15k0b55pqe"]
+
+[ext_resource type="PackedScene" uid="uid://dsrqbg3uignw0" path="res://views/base/base.tscn" id="1_2y3xv"]
+[ext_resource type="Script" path="res://views/splash/splash.gd" id="2_qm1ox"]
+
+[node name="base" instance=ExtResource("1_2y3xv")]
+
+[node name="container" parent="." index="0"]
+focus_mode = 1
+
+[node name="splash" type="Control" parent="container" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_qm1ox")
+
+[node name="background" type="ColorRect" parent="container/splash" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="label" type="Label" parent="container/splash" index="1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -41.5
+offset_right = 120.0
+offset_bottom = 41.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 60
+text = "CookAid"

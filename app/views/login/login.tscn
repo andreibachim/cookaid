@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhtmrykb6mi62"]
+
+[ext_resource type="PackedScene" uid="uid://dsrqbg3uignw0" path="res://views/base/base.tscn" id="1_sebn8"]
+[ext_resource type="Script" path="res://views/login/login.gd" id="2_l3cqf"]
+
+[node name="base" instance=ExtResource("1_sebn8")]
+
+[node name="login" type="ScrollContainer" parent="container" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+script = ExtResource("2_l3cqf")
+
+[node name="margin" type="MarginContainer" parent="container/login" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 1
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="form" type="VBoxContainer" parent="container/login/margin" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+focus_mode = 1
+theme_override_constants/separation = 16
+
+[node name="email" type="LineEdit" parent="container/login/margin/form" index="0"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+placeholder_text = "email address"
+virtual_keyboard_type = 5
+
+[node name="password" type="LineEdit" parent="container/login/margin/form" index="1"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+placeholder_text = "password"
+virtual_keyboard_type = 6
+secret = true
+
+[node name="login" type="Button" parent="container/login/margin/form" index="2"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Log In"
+
+[node name="login_client" type="HTTPRequest" parent="container/login/margin/form" index="3"]
+
+[connection signal="button_up" from="container/login/margin/form/login" to="container/login" method="_on_login_button_up"]

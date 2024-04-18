@@ -13,7 +13,6 @@ use crate::{
 };
 
 mod check_session;
-mod encryption_token;
 mod ingredient;
 mod login;
 mod recipe;
@@ -31,6 +30,7 @@ pub fn get(State(app_state): State<AppState>) -> axum::Router {
         .route("/recipe", axum::routing::post(recipe::create))
         .route("/recipe/:recipe_id", axum::routing::put(recipe::update))
         .route("/recipe/:recipe_id", axum::routing::get(recipe::get))
+        .route("/recipe/:recipe_id", axum::routing::delete(recipe::remove))
         .route(
             "/recipe/:recipe_id/ingredient",
             axum::routing::post(ingredient::create),
@@ -46,10 +46,6 @@ pub fn get(State(app_state): State<AppState>) -> axum::Router {
         .route("/recipe/:recipe_id/step", axum::routing::post(step::create))
         .route_layer(from_fn_with_state(app_state.clone(), auth_filter))
         .route("/health-check", axum::routing::get(()))
-        .route(
-            "/encryption-token",
-            axum::routing::get(encryption_token::get),
-        )
         .route("/register", post(register::register))
         .route("/login", post(login::login))
         .route("/check-session", post(check_session::check_session))
