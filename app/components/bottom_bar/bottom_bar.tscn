@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://dd5avuucf4xhn"]
+
+[ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="1_nnvls"]
+[ext_resource type="Script" path="res://components/bottom_bar/bottom_bar.gd" id="1_v1g4s"]
+
+[node name="bottom_bar" type="ColorRect"]
+custom_minimum_size = Vector2(0, 48)
+size_flags_vertical = 8
+color = Color(0.2, 0.2, 0.2, 1)
+script = ExtResource("1_v1g4s")
+
+[node name="margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="hbox" type="HBoxContainer" parent="margin"]
+layout_mode = 2
+
+[node name="new_recipe" parent="margin/hbox" instance=ExtResource("1_nnvls")]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "New"
+flat = true
+
+[connection signal="button_up" from="margin/hbox/new_recipe" to="." method="_on_new_recipe_button_up"]

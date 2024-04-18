@@ -23,10 +23,3 @@ func _ready() -> void:
 				recipes_list.add_child(recipe_item)
 		_:
 			printerr("Could not load recipes")
-			
-func _on_logout_button_up() -> void:
-	match DirAccess.remove_absolute("user://token"):
-		OK: 
-			Config.TOKEN = ""
-			Navigator.load_login_screen()
-		_: printerr("Could not delete session token")

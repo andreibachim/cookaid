@@ -1,0 +1,132 @@
+[gd_scene load_steps=8 format=3 uid="uid://47qs6k7ikg6b"]
+
+[ext_resource type="PackedScene" uid="uid://dsrqbg3uignw0" path="res://views/base/base.tscn" id="1_exiaa"]
+[ext_resource type="Script" path="res://views/recipe/new/new_recipe.gd" id="2_qrv6c"]
+[ext_resource type="PackedScene" uid="uid://bxnd1fk007ne5" path="res://components/top_bar/top_bar.tscn" id="3_myyxy"]
+[ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="4_v5h1a"]
+[ext_resource type="PackedScene" uid="uid://cw6uuscb3upxj" path="res://components/text_popup/text_popup.tscn" id="5_halp1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1kc70"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d4pwv"]
+
+[node name="base" instance=ExtResource("1_exiaa")]
+theme_override_constants/separation = 0
+
+[node name="new_recipe" type="VBoxContainer" parent="container" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+script = ExtResource("2_qrv6c")
+popup_template = ExtResource("5_halp1")
+
+[node name="http_client" type="HTTPRequest" parent="container/new_recipe" index="0"]
+
+[node name="top_bar" parent="container/new_recipe" index="1" instance=ExtResource("3_myyxy")]
+layout_mode = 2
+
+[node name="margin" type="MarginContainer" parent="container/new_recipe" index="2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 32
+
+[node name="carousel" type="TabContainer" parent="container/new_recipe/margin" index="0"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1kc70")
+tabs_visible = false
+
+[node name="name" type="VBoxContainer" parent="container/new_recipe/margin/carousel" index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="label" type="RichTextLabel" parent="container/new_recipe/margin/carousel/name" index="0"]
+layout_mode = 2
+theme_override_font_sizes/bold_font_size = 23
+bbcode_enabled = true
+text = "[b]Name your recipe[/b]"
+fit_content = true
+
+[node name="recipe_name_input" type="LineEdit" parent="container/new_recipe/margin/carousel/name" index="1"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+caret_blink = true
+
+[node name="hbox" type="HBoxContainer" parent="container/new_recipe/margin/carousel/name" index="2"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="cancel" parent="container/new_recipe/margin/carousel/name/hbox" index="0" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="recipe_name_next" parent="container/new_recipe/margin/carousel/name/hbox" index="1" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 10
+text = "Next"
+
+[node name="details" type="VBoxContainer" parent="container/new_recipe/margin/carousel" index="2"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="description_vbox" type="VBoxContainer" parent="container/new_recipe/margin/carousel/details" index="0"]
+layout_mode = 2
+
+[node name="description_label" type="RichTextLabel" parent="container/new_recipe/margin/carousel/details/description_vbox" index="0"]
+layout_mode = 2
+theme_override_font_sizes/italics_font_size = 24
+bbcode_enabled = true
+text = "[i]Description[/i]"
+fit_content = true
+
+[node name="description" type="TextEdit" parent="container/new_recipe/margin/carousel/details/description_vbox" index="1"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+focus_mode = 1
+theme_override_styles/focus = SubResource("StyleBoxEmpty_d4pwv")
+placeholder_text = "Recipe description"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+wrap_mode = 1
+
+[node name="margin" type="MarginContainer" parent="container/new_recipe/margin/carousel/details" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="hbox" type="HBoxContainer" parent="container/new_recipe/margin/carousel/details/margin" index="0"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="back_to_name" parent="container/new_recipe/margin/carousel/details/margin/hbox" index="0" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Back"
+
+[node name="next_to_ingredients" parent="container/new_recipe/margin/carousel/details/margin/hbox" index="1" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Next"
+
+[connection signal="button_up" from="container/new_recipe/margin/carousel/name/hbox/cancel" to="container/new_recipe" method="_on_cancel_button_up"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/name/hbox/recipe_name_next" to="container/new_recipe" method="_on_recipe_name_next_button_up"]
+[connection signal="focus_entered" from="container/new_recipe/margin/carousel/details/description_vbox/description" to="container/new_recipe" method="_on_description_focus_entered"]
+[connection signal="gui_input" from="container/new_recipe/margin/carousel/details/description_vbox/description" to="container/new_recipe" method="_on_description_gui_input"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/details/margin/hbox/back_to_name" to="container/new_recipe" method="_on_back_to_name_button_up"]

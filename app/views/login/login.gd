@@ -25,10 +25,12 @@ func _on_login_button_up():
 			var token = JSON.parse_string((response_array[3] as PackedByteArray)\
 				.get_string_from_utf8()).token
 			if !save_token(token):
+				Config.TOKEN = token
 				Navigator.load_recipes_list_screen()
 			else:
 				printerr("Could not save token")
 		_:
+			printerr(response_array)
 			printerr("Failed to login")
 
 func save_token(token: String) -> Error:

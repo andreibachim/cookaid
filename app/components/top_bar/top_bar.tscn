@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxnd1fk007ne5"]
+
+[ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="1_jjjia"]
+[ext_resource type="Script" path="res://components/top_bar/top_bar.gd" id="1_mr288"]
+
+[node name="top_bar" type="ColorRect"]
+custom_minimum_size = Vector2(0, 48)
+color = Color(0.2, 0.2, 0.2, 1)
+script = ExtResource("1_mr288")
+
+[node name="top_margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="vbox" type="HBoxContainer" parent="top_margin"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="log_out" parent="top_margin/vbox" instance=ExtResource("1_jjjia")]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Log out"
+flat = true
+
+[connection signal="button_up" from="top_margin/vbox/log_out" to="." method="_on_log_out_button_up"]

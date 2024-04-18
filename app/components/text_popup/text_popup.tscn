@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://cw6uuscb3upxj"]
+
+[ext_resource type="Script" path="res://components/text_popup/text_popup.gd" id="1_255cd"]
+[ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="1_t66ig"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_emys3"]
+
+[node name="text_popup" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_255cd")
+
+[node name="hbox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="margin" type="MarginContainer" parent="hbox"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="menu" type="HBoxContainer" parent="hbox/margin"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+
+[node name="cancel" parent="hbox/margin/menu" instance=ExtResource("1_t66ig")]
+layout_mode = 2
+text = "Cancel"
+flat = true
+
+[node name="save" parent="hbox/margin/menu" instance=ExtResource("1_t66ig")]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Save"
+flat = true
+
+[node name="text_edit" type="TextEdit" parent="hbox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_emys3")
+placeholder_text = "Placeholder"
+caret_blink = true
+caret_blink_interval = 0.45
+
+[connection signal="button_up" from="hbox/margin/menu/cancel" to="." method="_on_cancel_button_up"]
+[connection signal="button_up" from="hbox/margin/menu/save" to="." method="_on_save_button_up"]

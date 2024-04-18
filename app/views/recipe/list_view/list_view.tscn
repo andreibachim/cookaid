@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cl3na7bi7lhuf"]
+[gd_scene load_steps=6 format=3 uid="uid://cl3na7bi7lhuf"]
 
 [ext_resource type="PackedScene" uid="uid://dsrqbg3uignw0" path="res://views/base/base.tscn" id="1_a7l6q"]
-[ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="2_32dog"]
 [ext_resource type="Script" path="res://views/recipe/list_view/list_view.gd" id="2_kvwp1"]
 [ext_resource type="PackedScene" uid="uid://b2q8kk6y1h74e" path="res://views/recipe/list_view/list_item/list_item.tscn" id="3_rm1ct"]
+[ext_resource type="PackedScene" uid="uid://bxnd1fk007ne5" path="res://components/top_bar/top_bar.tscn" id="4_4rh2y"]
+[ext_resource type="PackedScene" uid="uid://dd5avuucf4xhn" path="res://components/bottom_bar/bottom_bar.tscn" id="5_qjf75"]
 
 [node name="base" instance=ExtResource("1_a7l6q")]
 theme_override_constants/separation = 0
@@ -18,30 +19,8 @@ grow_vertical = 2
 script = ExtResource("2_kvwp1")
 list_item_template = ExtResource("3_rm1ct")
 
-[node name="top_bar" type="ColorRect" parent="container/list_view" index="0"]
-custom_minimum_size = Vector2(0, 48)
+[node name="top_bar" parent="container/list_view" index="0" instance=ExtResource("4_4rh2y")]
 layout_mode = 2
-color = Color(0.2, 0.2, 0.2, 1)
-
-[node name="top_margin" type="MarginContainer" parent="container/list_view/top_bar" index="0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_right = 16
-
-[node name="vbox" type="HBoxContainer" parent="container/list_view/top_bar/top_margin" index="0"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="log_out" parent="container/list_view/top_bar/top_margin/vbox" index="0" instance=ExtResource("2_32dog")]
-layout_mode = 2
-size_flags_horizontal = 10
-text = "Log out"
-flat = true
 
 [node name="list" type="ScrollContainer" parent="container/list_view" index="1"]
 layout_mode = 2
@@ -52,31 +31,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="bottom_bar" type="ColorRect" parent="container/list_view" index="2"]
-custom_minimum_size = Vector2(0, 48)
+[node name="bottom_bar" parent="container/list_view" index="2" instance=ExtResource("5_qjf75")]
 layout_mode = 2
-size_flags_vertical = 8
-color = Color(0.2, 0.2, 0.2, 1)
-
-[node name="margin" type="MarginContainer" parent="container/list_view/bottom_bar" index="0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_right = 16
-
-[node name="hbox" type="HBoxContainer" parent="container/list_view/bottom_bar/margin" index="0"]
-layout_mode = 2
-
-[node name="new_recipe" parent="container/list_view/bottom_bar/margin/hbox" index="0" instance=ExtResource("2_32dog")]
-layout_mode = 2
-size_flags_horizontal = 10
-text = "New"
-flat = true
 
 [node name="http_client" type="HTTPRequest" parent="container/list_view" index="3"]
-
-[connection signal="button_up" from="container/list_view/top_bar/top_margin/vbox/log_out" to="container/list_view" method="_on_logout_button_up"]

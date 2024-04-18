@@ -1,6 +1,6 @@
 extends Node
 
-var API_URL: String = "http://localhost:8080"
+var API_URL: String = "http://192.168.0.127:8080"
 var TOKEN: String
 
 func _ready() -> void:
