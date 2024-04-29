@@ -73,14 +73,13 @@ pub async fn get_all(
         Ok(mut cursor) => {
             let mut recipe_ids: Vec<OutgoingRecipe> = vec![];
             while cursor.advance().await.expect("Could not advance cursor") {
-                let _ = cursor.deserialize_current().and_then(|recipe| {
+                let _ = cursor.deserialize_current().map(|recipe| {
                     recipe_ids.push(OutgoingRecipe::from(recipe));
-                    Ok(())
                 });
             }
             Json(recipe_ids).into_response()
         }
-        Err(_error) => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        Err(_error) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
 }
 
@@ -217,10 +216,7 @@ pub async fn remove(
         )
         .await
     {
-        Ok(result) => {
-            log::info!("{:#?}", result);
-            StatusCode::OK
-        }
+        Ok(_) => StatusCode::OK,
         Err(error) => {
             log::error!(
                 "Could not delete recipe {}. Reason: {}",
@@ -284,7 +280,7 @@ impl Recipe {
         Self {
             _id: ObjectId::new(),
             owner,
-            status: RecipeStatus::DRAFT,
+            status: RecipeStatus::Draft,
             name,
             description: None,
             external_reference: None,
@@ -296,8 +292,8 @@ impl Recipe {
 
 #[derive(Debug, Serialize, Deserialize)]
 enum RecipeStatus {
-    DRAFT,
-    COMPLETED,
+    Draft,
+    Completed,
 }
 
 #[derive(Serialize)]

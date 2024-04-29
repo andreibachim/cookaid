@@ -60,8 +60,7 @@ pub async fn auth_filter(
     let header = match request
         .headers()
         .get("Authorization")
-        .map(|header_value| header_value.to_str().ok())
-        .flatten()
+        .and_then(|header_value| header_value.to_str().ok())
     {
         Some(bearer_token) if bearer_token.starts_with("Bearer ") => bearer_token,
         Some(_) => return StatusCode::UNAUTHORIZED.into_response(),
@@ -84,6 +83,6 @@ pub async fn auth_filter(
             request.extensions_mut().insert(session);
             next.run(request).await
         }
-        None => return StatusCode::UNAUTHORIZED.into_response(),
+        None => StatusCode::UNAUTHORIZED.into_response(),
     }
 }

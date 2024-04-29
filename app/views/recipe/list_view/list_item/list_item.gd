@@ -14,7 +14,7 @@ func init(recipe_prop: Dictionary) -> void:
 
 func _ready() -> void:
 	title.text = recipe.name
-	if recipe.status == "DRAFT":
+	if recipe.status.to_lower() == "draft":
 		cook_button.disabled = true
 
 func _on_delete_button_up():

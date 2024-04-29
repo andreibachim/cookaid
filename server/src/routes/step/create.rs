@@ -1,6 +1,5 @@
+use super::{Step, StepRequest};
 use std::str::FromStr;
-
-use super::{step::Step, StepRequest};
 
 use axum::{
     extract::{Json, Path, State},
@@ -12,7 +11,7 @@ use bson::{doc, oid::ObjectId, to_bson};
 
 use crate::{
     constants::{DATABASE_NAME, DATABASE_RECIPES},
-    routes::{login::Session, recipe::Recipe},
+    routes::{login::Session, recipe::Recipe, step::OutgoingStep},
     AppState,
 };
 
@@ -26,7 +25,7 @@ pub async fn create(
         Ok(id) => id,
         Err(error) => {
             log::error!("Could not parse recipe id. Reason: {}", error);
-            return StatusCode::INTERNAL_SERVER_ERROR;
+            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
         }
     };
     let step = Step::from(payload);
@@ -35,7 +34,7 @@ pub async fn create(
         Ok(doc) => doc,
         Err(error) => {
             log::error!("Could not convert step into bson. Reason: {}", error);
-            return StatusCode::INTERNAL_SERVER_ERROR;
+            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
         }
     };
 
@@ -52,14 +51,14 @@ pub async fn create(
     {
         Ok(result) => {
             if result.matched_count == 0 || result.modified_count == 0 {
-                return StatusCode::NOT_FOUND;
+                StatusCode::NOT_FOUND.into_response()
             } else {
-                return StatusCode::OK;
+                Json(OutgoingStep::from(step)).into_response()
             }
         }
         Err(error) => {
             log::error!("Could not insert step to recipe. Reason: {}", error);
-            return StatusCode::INTERNAL_SERVER_ERROR;
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
         }
     }
 }

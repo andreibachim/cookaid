@@ -13,7 +13,7 @@ use crate::{
 
 use super::User;
 
-const USER_NOT_FOUND_ERROR_MESSAGE: &'static str = "User not found";
+const USER_NOT_FOUND_ERROR_MESSAGE: &str = "User not found";
 
 pub async fn login(
     State(app_state): State<AppState>,

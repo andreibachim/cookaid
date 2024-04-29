@@ -1,0 +1,119 @@
+[gd_scene load_steps=5 format=3 uid="uid://c5vsixsjw7jjc"]
+
+[ext_resource type="Script" path="res://components/step_popup/step_popup.gd" id="1_pmcdd"]
+[ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="2_s73dl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n2bmu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_emys3"]
+
+[node name="step_popup" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_pmcdd")
+
+[node name="hbox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="margin" type="MarginContainer" parent="hbox"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="menu" type="HBoxContainer" parent="hbox/margin"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+
+[node name="cancel" parent="hbox/margin/menu" instance=ExtResource("2_s73dl")]
+layout_mode = 2
+text = "Cancel"
+flat = true
+
+[node name="save" parent="hbox/margin/menu" instance=ExtResource("2_s73dl")]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Save"
+flat = true
+
+[node name="type_margin" type="MarginContainer" parent="hbox"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="hbox" type="HBoxContainer" parent="hbox/type_margin"]
+layout_mode = 2
+
+[node name="type_label" type="Label" parent="hbox/type_margin/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Type"
+horizontal_alignment = 1
+
+[node name="type_select" type="OptionButton" parent="hbox/type_margin/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_n2bmu")
+flat = true
+item_count = 2
+selected = 0
+popup/item_0/text = "Normal"
+popup/item_0/id = 0
+popup/item_1/text = "Timer"
+popup/item_1/id = 1
+
+[node name="timer_margin" type="MarginContainer" parent="hbox"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="hbox" type="HBoxContainer" parent="hbox/timer_margin"]
+layout_mode = 2
+
+[node name="timer_label" type="Label" parent="hbox/timer_margin/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Time"
+horizontal_alignment = 1
+
+[node name="timer_unit_select" type="OptionButton" parent="hbox/timer_margin/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 3
+selected = 1
+popup/item_0/text = "seconds"
+popup/item_0/id = 0
+popup/item_1/text = "minutes"
+popup/item_1/id = 1
+popup/item_2/text = "hours"
+popup/item_2/id = 2
+
+[node name="timer_value_spinbox" type="SpinBox" parent="hbox/timer_margin/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 0.0
+allow_greater = true
+
+[node name="text_edit" type="TextEdit" parent="hbox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/focus = SubResource("StyleBoxEmpty_emys3")
+placeholder_text = "Placeholder"
+caret_blink = true
+caret_blink_interval = 0.45
+
+[connection signal="button_up" from="hbox/margin/menu/cancel" to="." method="_on_cancel_button_up"]
+[connection signal="button_up" from="hbox/margin/menu/save" to="." method="_on_save_button_up"]
+[connection signal="item_selected" from="hbox/type_margin/hbox/type_select" to="." method="_on_type_select_item_selected"]

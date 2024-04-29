@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://47qs6k7ikg6b"]
+[gd_scene load_steps=10 format=3 uid="uid://47qs6k7ikg6b"]
 
 [ext_resource type="PackedScene" uid="uid://dsrqbg3uignw0" path="res://views/base/base.tscn" id="1_exiaa"]
 [ext_resource type="Script" path="res://views/recipe/new/new_recipe.gd" id="2_qrv6c"]
 [ext_resource type="PackedScene" uid="uid://bxnd1fk007ne5" path="res://components/top_bar/top_bar.tscn" id="3_myyxy"]
+[ext_resource type="PackedScene" uid="uid://c5vsixsjw7jjc" path="res://components/step_popup/step_popup.tscn" id="4_cqgwu"]
 [ext_resource type="PackedScene" uid="uid://frcobc43iij4" path="res://primitives/button.tscn" id="4_v5h1a"]
+[ext_resource type="PackedScene" uid="uid://dse7ve8djq8nb" path="res://views/recipe/new/step/step.tscn" id="5_cmmko"]
 [ext_resource type="PackedScene" uid="uid://cw6uuscb3upxj" path="res://components/text_popup/text_popup.tscn" id="5_halp1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1kc70"]
@@ -23,6 +25,8 @@ grow_vertical = 2
 focus_mode = 1
 script = ExtResource("2_qrv6c")
 popup_template = ExtResource("5_halp1")
+step_input_template = ExtResource("4_cqgwu")
+step_template = ExtResource("5_cmmko")
 
 [node name="http_client" type="HTTPRequest" parent="container/new_recipe" index="0"]
 
@@ -98,35 +102,145 @@ layout_mode = 2
 focus_mode = 1
 theme_override_styles/focus = SubResource("StyleBoxEmpty_d4pwv")
 placeholder_text = "Recipe description"
-editable = false
 context_menu_enabled = false
 shortcut_keys_enabled = false
 virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 wrap_mode = 1
 
-[node name="margin" type="MarginContainer" parent="container/new_recipe/margin/carousel/details" index="1"]
+[node name="external_reference" type="VBoxContainer" parent="container/new_recipe/margin/carousel/details" index="1"]
 layout_mode = 2
-size_flags_vertical = 3
 
-[node name="hbox" type="HBoxContainer" parent="container/new_recipe/margin/carousel/details/margin" index="0"]
+[node name="reference_label" type="RichTextLabel" parent="container/new_recipe/margin/carousel/details/external_reference" index="0"]
 layout_mode = 2
-size_flags_vertical = 8
+theme_override_font_sizes/italics_font_size = 24
+bbcode_enabled = true
+text = "[i]Reference[/i]"
+fit_content = true
 
-[node name="back_to_name" parent="container/new_recipe/margin/carousel/details/margin/hbox" index="0" instance=ExtResource("4_v5h1a")]
+[node name="reference" type="LineEdit" parent="container/new_recipe/margin/carousel/details/external_reference" index="1"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 1
+theme_override_styles/focus = SubResource("StyleBoxEmpty_d4pwv")
+placeholder_text = "Reference"
+context_menu_enabled = false
+virtual_keyboard_enabled = false
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+
+[node name="hbox" type="HBoxContainer" parent="container/new_recipe/margin/carousel/details" index="2"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="back" parent="container/new_recipe/margin/carousel/details/hbox" index="0" instance=ExtResource("4_v5h1a")]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Back"
 
-[node name="next_to_ingredients" parent="container/new_recipe/margin/carousel/details/margin/hbox" index="1" instance=ExtResource("4_v5h1a")]
+[node name="next" parent="container/new_recipe/margin/carousel/details/hbox" index="1" instance=ExtResource("4_v5h1a")]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Next"
 
+[node name="ingredients" type="VBoxContainer" parent="container/new_recipe/margin/carousel" index="3"]
+visible = false
+layout_mode = 2
+
+[node name="form" type="VBoxContainer" parent="container/new_recipe/margin/carousel/ingredients" index="0"]
+layout_mode = 2
+
+[node name="ingredients_edit" type="LineEdit" parent="container/new_recipe/margin/carousel/ingredients/form" index="0"]
+layout_mode = 2
+placeholder_text = "add new ingredient"
+context_menu_enabled = false
+virtual_keyboard_enabled = false
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+
+[node name="separator" type="HSeparator" parent="container/new_recipe/margin/carousel/ingredients" index="1"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="list" type="ScrollContainer" parent="container/new_recipe/margin/carousel/ingredients" index="2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="container/new_recipe/margin/carousel/ingredients/list" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="nav" type="HBoxContainer" parent="container/new_recipe/margin/carousel/ingredients" index="3"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="back" parent="container/new_recipe/margin/carousel/ingredients/nav" index="0" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Back"
+
+[node name="next" parent="container/new_recipe/margin/carousel/ingredients/nav" index="1" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Next"
+
+[node name="steps" type="VBoxContainer" parent="container/new_recipe/margin/carousel" index="4"]
+visible = false
+layout_mode = 2
+
+[node name="form" type="VBoxContainer" parent="container/new_recipe/margin/carousel/steps" index="0"]
+layout_mode = 2
+
+[node name="step_edit" type="LineEdit" parent="container/new_recipe/margin/carousel/steps/form" index="0"]
+layout_mode = 2
+placeholder_text = "add new step"
+context_menu_enabled = false
+virtual_keyboard_enabled = false
+shortcut_keys_enabled = false
+middle_mouse_paste_enabled = false
+
+[node name="separator" type="HSeparator" parent="container/new_recipe/margin/carousel/steps" index="1"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="list" type="ScrollContainer" parent="container/new_recipe/margin/carousel/steps" index="2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="container/new_recipe/margin/carousel/steps/list" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="nav" type="HBoxContainer" parent="container/new_recipe/margin/carousel/steps" index="3"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="back" parent="container/new_recipe/margin/carousel/steps/nav" index="0" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Back"
+
+[node name="finish" parent="container/new_recipe/margin/carousel/steps/nav" index="1" instance=ExtResource("4_v5h1a")]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Finish"
+
 [connection signal="button_up" from="container/new_recipe/margin/carousel/name/hbox/cancel" to="container/new_recipe" method="_on_cancel_button_up"]
 [connection signal="button_up" from="container/new_recipe/margin/carousel/name/hbox/recipe_name_next" to="container/new_recipe" method="_on_recipe_name_next_button_up"]
-[connection signal="focus_entered" from="container/new_recipe/margin/carousel/details/description_vbox/description" to="container/new_recipe" method="_on_description_focus_entered"]
 [connection signal="gui_input" from="container/new_recipe/margin/carousel/details/description_vbox/description" to="container/new_recipe" method="_on_description_gui_input"]
-[connection signal="button_up" from="container/new_recipe/margin/carousel/details/margin/hbox/back_to_name" to="container/new_recipe" method="_on_back_to_name_button_up"]
+[connection signal="gui_input" from="container/new_recipe/margin/carousel/details/external_reference/reference" to="container/new_recipe" method="_on_reference_gui_input"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/details/hbox/back" to="container/new_recipe" method="_on_back_button_up"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/details/hbox/next" to="container/new_recipe" method="_on_next_button_up"]
+[connection signal="gui_input" from="container/new_recipe/margin/carousel/ingredients/form/ingredients_edit" to="container/new_recipe" method="_on_ingredients_edit_gui_input"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/ingredients/nav/back" to="container/new_recipe" method="_on_back_button_up"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/ingredients/nav/next" to="container/new_recipe" method="_on_next_button_up"]
+[connection signal="gui_input" from="container/new_recipe/margin/carousel/steps/form/step_edit" to="container/new_recipe" method="_on_step_edit_gui_input"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/steps/nav/back" to="container/new_recipe" method="_on_back_button_up"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/steps/nav/finish" to="container/new_recipe" method="_on_cancel_button_up"]
