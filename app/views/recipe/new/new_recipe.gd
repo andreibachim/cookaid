@@ -150,3 +150,18 @@ func add_step(step: Dictionary) -> void:
 	var step_node = step_template.instantiate()
 	step_node.set_step(step)
 	step_list.add_child(step_node)
+
+func _on_finish_button_up():
+	var payload: Dictionary = { "status": "Ready" }
+	http_client.request(
+		Config.API_URL + "/api/recipe/" + recipe_id,
+		["Content-Type: application/json", "Authorization: Bearer " + Config.TOKEN],
+		HTTPClient.METHOD_PUT,
+		JSON.stringify(payload),
+	)
+	var response_array = await http_client.request_completed 
+	print(response_array)
+	var status_code = response_array[1]
+	match status_code:
+		200: _on_cancel_button_up()
+		_: printerr("Error when updating recipe status")

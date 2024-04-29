@@ -176,6 +176,7 @@ pub async fn update(
         .await
     {
         Ok(result) => {
+            log::info!("The result is {:#?}", result);
             if result.matched_count == 0 || result.modified_count == 0 {
                 StatusCode::NOT_FOUND
             } else {
@@ -243,6 +244,7 @@ pub struct UpdateRecipeRequest {
     description: Option<String>,
     external_reference: Option<String>,
     name: Option<String>,
+    status: Option<RecipeStatus>,
 }
 
 impl From<UpdateRecipeRequest> for Document {
@@ -258,6 +260,18 @@ impl From<UpdateRecipeRequest> for Document {
 
         if value.external_reference.is_some() {
             document.insert("external_reference", value.external_reference);
+        }
+
+        if value.status.is_some() {
+            document.insert(
+                "status",
+                format!(
+                    "{:?}",
+                    value
+                        .status
+                        .expect("The 'status' should exist at this point")
+                ),
+            );
         }
         document
     }
@@ -293,7 +307,7 @@ impl Recipe {
 #[derive(Debug, Serialize, Deserialize)]
 enum RecipeStatus {
     Draft,
-    Completed,
+    Ready,
 }
 
 #[derive(Serialize)]

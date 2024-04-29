@@ -174,7 +174,7 @@ size_flags_vertical = 3
 
 [node name="nav" type="HBoxContainer" parent="container/new_recipe/margin/carousel/ingredients" index="3"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 8
 
 [node name="back" parent="container/new_recipe/margin/carousel/ingredients/nav" index="0" instance=ExtResource("4_v5h1a")]
 custom_minimum_size = Vector2(0, 48)
@@ -218,7 +218,7 @@ size_flags_vertical = 3
 
 [node name="nav" type="HBoxContainer" parent="container/new_recipe/margin/carousel/steps" index="3"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 8
 
 [node name="back" parent="container/new_recipe/margin/carousel/steps/nav" index="0" instance=ExtResource("4_v5h1a")]
 custom_minimum_size = Vector2(0, 48)
@@ -243,4 +243,4 @@ text = "Finish"
 [connection signal="button_up" from="container/new_recipe/margin/carousel/ingredients/nav/next" to="container/new_recipe" method="_on_next_button_up"]
 [connection signal="gui_input" from="container/new_recipe/margin/carousel/steps/form/step_edit" to="container/new_recipe" method="_on_step_edit_gui_input"]
 [connection signal="button_up" from="container/new_recipe/margin/carousel/steps/nav/back" to="container/new_recipe" method="_on_back_button_up"]
-[connection signal="button_up" from="container/new_recipe/margin/carousel/steps/nav/finish" to="container/new_recipe" method="_on_cancel_button_up"]
+[connection signal="button_up" from="container/new_recipe/margin/carousel/steps/nav/finish" to="container/new_recipe" method="_on_finish_button_up"]
