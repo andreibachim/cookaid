@@ -15,8 +15,10 @@ script = ExtResource("1_eoa1n")
 layout_mode = 2
 
 [node name="text" type="Label" parent="hbox"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+autowrap_mode = 3
 
 [node name="timer" type="HBoxContainer" parent="hbox"]
 layout_mode = 2
